@@ -17,6 +17,7 @@ import { isKeyOf, isObject, objectOmit } from '../utils/object'
 import { isString, joinRouteParts, titleCase } from '../utils/string'
 import { uniqueValidator } from '../validators/unique'
 import { query } from './query'
+import { Filter } from '../utils/dashboard/filter'
 
 interface BaseCollectionDefinition {
   /**
@@ -199,6 +200,15 @@ interface BaseCollectionDefinition {
       perPage?: number
 
       /**
+       * The default filter for the overview table.
+       *
+       * Exemple:
+       * 
+       *      { filter: 'isActive[=][true]' }
+       */
+      filter?: (filter: Filter) => Filter,
+
+      /**
        * The field or fields used to display search results for this collection in the dashboard.
        *
        * If not specified, the first custom field or the record ID will be used as the search label.
@@ -213,7 +223,7 @@ interface BaseCollectionDefinition {
        * - **`id`** - The record ID.
        * - **`table`** - The `CollectionOverview` instance.
        */
-      additionalTableRowOptionsVueComponent?: string
+      additionalTableRowOptionsVueComponent?: string,
     }
 
     /**
@@ -493,9 +503,7 @@ export interface MultiEntryCollectionDefinition extends BaseCollectionDefinition
          * - When set to `'private'`, the route requires the user to be authenticated.
          * - When set to `false`, the route is disabled.
          *
-         * @default 'private'
-         */
-        update?: 'public' | 'private' | false
+         * @default 'private'collection| false
 
         /**
          * Specifies whether to enable the default API route for updating multiple collection records.
@@ -1017,6 +1025,7 @@ export type ResolvedCollectionDefinition = Required<Omit<MultiEntryCollectionDef
     overviewTable: {
       columns: { field: string; width?: number }[]
       sort: { field: string; direction: 'asc' | 'desc' }
+      filter?: (filter: Filter) => Filter
       perPage: number
       searchLabel: [string, string | null]
       additionalTableRowOptionsVueComponent?: string
@@ -1235,6 +1244,7 @@ export function defineCollection(definition: CollectionDefinition): ResolvedColl
         direction: 'desc',
       },
       perPage: d.dashboard?.overviewTable?.perPage ?? 50,
+      filter: d.dashboard?.overviewTable?.filter,
       searchLabel: d.dashboard?.overviewTable?.searchLabel
         ? isString(d.dashboard?.overviewTable.searchLabel)
           ? [d.dashboard?.overviewTable.searchLabel, null]
