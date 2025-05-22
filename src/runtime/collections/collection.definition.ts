@@ -204,9 +204,15 @@ interface BaseCollectionDefinition {
        *
        * Exemple:
        * 
-       *      { filter: 'isActive[=][true]' }
+       *      {
+       *        filter: {
+       *          $and: [{
+       *              isActive: { $eq: true }
+       *           }]
+       *         }
+       *       }
        */
-      filter?: (filter: Filter) => Filter,
+      filter?: Record<string, any>
 
       /**
        * The field or fields used to display search results for this collection in the dashboard.
@@ -1025,7 +1031,7 @@ export type ResolvedCollectionDefinition = Required<Omit<MultiEntryCollectionDef
     overviewTable: {
       columns: { field: string; width?: number }[]
       sort: { field: string; direction: 'asc' | 'desc' }
-      filter?: (filter: Filter) => Filter
+      filter?: Record<string, any>
       perPage: number
       searchLabel: [string, string | null]
       additionalTableRowOptionsVueComponent?: string

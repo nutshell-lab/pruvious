@@ -53,7 +53,9 @@ export class CollectionOverview<T extends CollectionName> {
       .perPage(this.collection.dashboard.overviewTable.perPage)
       .page(1)
 
-    collection.dashboard.overviewTable.filter?.(this.defaultFilter)
+    if (collection.dashboard.overviewTable.filter) {
+      this.defaultFilter.where(collection.dashboard.overviewTable.filter)
+    }
 
     if (
       (collection.translatable && this.prevQuery === `where=language[=][${this.language}]`) ||
