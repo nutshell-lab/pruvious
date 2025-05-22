@@ -141,6 +141,10 @@ export class CollectionOverview<T extends CollectionName> {
       this.filter.page(1)
     }
 
+    if (this.collection.dashboard.overviewTable.filter) {
+      this.filter.where(this.collection.dashboard.overviewTable.filter)
+    }
+
     this.refresh()
   }
 
