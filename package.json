@@ -50,7 +50,8 @@
     "test-ui:redis": "cross-env NUXT_PRUVIOUS_REDIS=redis://127.0.0.1:6379/1 vitest --ui",
     "test-ui:s3": "cross-env NUXT_PRUVIOUS_UPLOADS_DRIVE_TYPE=s3 NUXT_PRUVIOUS_UPLOADS_DRIVE_KEY=pruvious NUXT_PRUVIOUS_UPLOADS_DRIVE_SECRET=pruvious NUXT_PRUVIOUS_UPLOADS_DRIVE_BUCKET=pruvious NUXT_PRUVIOUS_UPLOADS_DRIVE_REGION=pruvious NUXT_PRUVIOUS_UPLOADS_DRIVE_ENDPOINT=http://127.0.0.1:9000 NUXT_PRUVIOUS_UPLOADS_DRIVE_BASE_URL=http://127.0.0.1:9000/pruvious vitest --ui",
     "test:watch": "vitest watch",
-    "try": "node ./scripts/try.js"
+    "try": "node ./scripts/try.js",
+    "postinstall": "node ./scripts/build.js"
   },
   "dependencies": {
     "@antfu/utils": "^0.7.10",
