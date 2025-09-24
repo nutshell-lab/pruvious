@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const result = await query('users', event.context.language)
-    .deselect({ password: true })
+    .deselect({ password: true, mfaSecretkey: true, mfaRecoveryCodes: true })
     .where('id', event.context.auth.user.id)
     .populate()
     .update(objectOmit(input.data, ['capabilities', 'email', 'isActive', 'isAdmin', 'role'] as any))
