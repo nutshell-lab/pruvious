@@ -159,7 +159,11 @@ export async function verifyToken(
       const stored = await fetchToken(token)
 
       if (stored?.userId === tokenData.userId && stored.iat === tokenData.iat && stored.exp === tokenData.exp) {
-        const user = await query('users').deselect({ password: true }).where('id', tokenData.userId).populate().first()
+        const user = await query('users')
+          .deselect({ password: true, mfaSecretkey: true, mfaRecoveryCodes: true })
+          .where('id', tokenData.userId)
+          .populate()
+          .first()
 
         if (user && user.isActive) {
           return { isValid: true, user, tokenData }
