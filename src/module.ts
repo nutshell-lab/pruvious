@@ -11,7 +11,6 @@ import fs from 'fs-extra'
 import { nanoid } from 'nanoid'
 import path from 'path'
 import semver from 'semver'
-import { isDevelopment, isTest } from 'std-env'
 import { warn } from './runtime/instances/logger'
 import {
   initModulePathResolver,
@@ -527,6 +526,9 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.alias['#pruvious'] = resolveAppPath('./.pruvious')
     nuxt.options.ignore ||= []
     nuxt.options.pages = true
+    nuxt.options.vite = defu(nuxt.options.vite ?? {}, {
+      $server: { build: { rollupOptions: { output: { preserveModules: true } } } },
+    })
 
     const dbInfo = getDatabaseInfo()
 
@@ -542,6 +544,8 @@ export default defineNuxtModule<ModuleOptions>({
         nuxt.options.dir.public,
         moduleOptions.uploads.drive.urlPrefix ?? 'uploads',
       )
+      const isDevelopment = process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development'
+      const isTest = process.env.NODE_ENV === 'test' || (process.env.TEST ? process.env.TEST !== 'false' : false)
       fs.ensureDirSync(uploadsDir)
       fs.removeSync(symDir)
 
